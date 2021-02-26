@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/p2p/enode"
-	"github.com/ethereum/go-ethereum/params"
 	"net"
 	"os"
 	"path"
@@ -709,7 +708,9 @@ func initNetwork(ctx *cli.Context) error {
 		return err
 	}
 	config.Eth.Genesis = genesis
-	config.Eth.Genesis.Config.Ethash = &params.EthashConfig{}
+	//config.Eth.Genesis.Config.EWASMBlock = big.NewInt(0)
+	//config.Eth.Genesis.Config.YoloV2Block = big.NewInt(0)
+	//config.Eth.Genesis.Config.Ethash = &params.EthashConfig{}
 
 	stack, err := node.New(&config.Node)
 	if err != nil {
