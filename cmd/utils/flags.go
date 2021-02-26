@@ -726,6 +726,37 @@ var (
 		Usage: "External EVM configuration (default = built-in interpreter)",
 		Value: "",
 	}
+
+	// Init network
+	InitNetworkSize = cli.IntFlag{
+		Name:  "init.size",
+		Usage: "the size of the network",
+		Value: 1,
+	}
+
+	InitNetworkDir = cli.StringFlag{
+		Name:  "init.dir",
+		Usage: "the direction to store initial network data",
+		Value: "",
+	}
+
+	InitNetworkIps = cli.StringFlag{
+		Name:  "init.ips",
+		Usage: "the ips of each node in the network, example '192.168.0.1,192.168.0.2'",
+		Value: "",
+	}
+
+	InitNetworkAddresses = cli.StringFlag{
+		Name:  "init.Addresses",
+		Usage: "the ips of each node in the network, example '192.168.0.1:30311,192.168.0.2:30311'",
+		Value: "",
+	}
+
+	InitNetworkPort = cli.IntFlag{
+		Name:  "init.p2p-port",
+		Usage: "the p2p port of the nodes in the network",
+		Value: 30311,
+	}
 )
 
 // MakeDataDir retrieves the currently requested data directory, terminating
