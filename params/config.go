@@ -315,11 +315,11 @@ type ChainConfig struct {
 	EIP155Block *big.Int `json:"eip155Block,omitempty"` // EIP155 HF block
 	EIP158Block *big.Int `json:"eip158Block,omitempty"` // EIP158 HF block
 
-	ByzantiumBlock      *big.Int `json:"byzantiumBlock,omitempty"`      // Byzantium switch block (nil = no fork, 0 = already on byzantium)
-	ConstantinopleBlock *big.Int `json:"constantinopleBlock,omitempty"` // Constantinople switch block (nil = no fork, 0 = already activated)
-	PetersburgBlock     *big.Int `json:"petersburgBlock,omitempty"`     // Petersburg switch block (nil = same as Constantinople)
-	IstanbulBlock       *big.Int `json:"istanbulBlock,omitempty"`       // Istanbul switch block (nil = no fork, 0 = already on istanbul)
-	MuirGlacierBlock    *big.Int `json:"muirGlacierBlock,omitempty" toml:",omitempty"`    // Eip-2384 (bomb delay) switch block (nil = no fork, 0 = already activated)
+	ByzantiumBlock      *big.Int `json:"byzantiumBlock,omitempty"`                     // Byzantium switch block (nil = no fork, 0 = already on byzantium)
+	ConstantinopleBlock *big.Int `json:"constantinopleBlock,omitempty"`                // Constantinople switch block (nil = no fork, 0 = already activated)
+	PetersburgBlock     *big.Int `json:"petersburgBlock,omitempty"`                    // Petersburg switch block (nil = same as Constantinople)
+	IstanbulBlock       *big.Int `json:"istanbulBlock,omitempty"`                      // Istanbul switch block (nil = no fork, 0 = already on istanbul)
+	MuirGlacierBlock    *big.Int `json:"muirGlacierBlock,omitempty" toml:",omitempty"` // Eip-2384 (bomb delay) switch block (nil = no fork, 0 = already activated)
 
 	YoloV2Block *big.Int `json:"yoloV2Block,omitempty" toml:",omitempty"` // YOLO v2: Gas repricings TODO @holiman add EIP references
 	EWASMBlock  *big.Int `json:"ewasmBlock,omitempty" toml:",omitempty"`  // EWASM switch block (nil = no fork, 0 = already activated)

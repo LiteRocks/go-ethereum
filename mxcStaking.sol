@@ -6,6 +6,24 @@ import "./Math.sol";
 import "./SafeMath.sol";
 
 contract mxcStaking {
+
+    /// @notice Emitted when staking
+    event staked(address account, uint256 amount);
+
+    /// @notice Emitted when initialized
+    event initialized(address account);
+
+    /// @notice Emitted when addWhiteList
+    event addedWhiteList(address account);
+
+    /// @notice Emitted when withdrawnStaking
+    event withdrawnStaking(address account,uint256 amount);
+
+    /// @notice Emitted when claimedReward
+    event claimedReward(address account,uint256 amount);
+
+
+
     using SafeMath for uint256;
 
     mapping(address=>uint256) nodeStaking;
@@ -18,17 +36,19 @@ contract mxcStaking {
     uint256 public distributedRewards = 0;
     uint256 public totalStaking = 0;
     uint256 public scale = 10000;
-    bool initialized = false;
+    bool public isInitialized = false;
 
     function init(address account) external returns(bool){
-        if (initialized) {
+        if (isInitialized) {
             return true;
         }
-        initialized = true;
+        isInitialized = true;
 
         //NOTE:values not initialized automatically in genesis block.
         owner = account;
         scale = 10000;
+        emit initialized(account);
+
         return true;
     }
 
@@ -45,6 +65,8 @@ contract mxcStaking {
         if(!isInWhiteList(account)){
             whitelist.push(account);
         }
+        emit addedWhiteList(account);
+
         return true;
     }
 
@@ -59,10 +81,11 @@ contract mxcStaking {
             nodeStaking[msg.sender] = nodeStaking[msg.sender].add(msg.value);
         }else{
             nodeStaking[msg.sender] = msg.value;
+            nodes.push(msg.sender);
+
         }
         totalStaking = totalStaking.add(msg.value);
-        nodes.push(msg.sender);
-
+        emit staked(msg.sender, msg.value);
         return true;
     }
 
@@ -71,7 +94,7 @@ contract mxcStaking {
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards);
         distributeRewards(newRewards);
 
-        require(amount >= nodeStaking[msg.sender],"not enough staking");
+        require(amount <= nodeStaking[msg.sender],"not enough staking balance");
         msg.sender.transfer(amount);
         totalStaking = totalStaking.sub(amount);
         nodeStaking[msg.sender] = nodeStaking[msg.sender].sub(amount);
@@ -83,18 +106,27 @@ contract mxcStaking {
                 }
             }
         }
+        emit withdrawnStaking(msg.sender, amount);
         return true;
     }
 
     function claimReward() external returns(bool) {
+
+        require(isInWhiteList(msg.sender),"not in white list");
         uint256 balance = address(this).balance;
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards);
-        distributeRewards(newRewards);
+        if(!distributeRewards(newRewards)){
+            return true;
+        }
 
-        if (nodeRewards[msg.sender] > 0) {
-            msg.sender.transfer(nodeRewards[msg.sender]);
+        uint256 value = nodeRewards[msg.sender];
+        if (value > 0) {
+            msg.sender.transfer(value);
+            distributedRewards = distributedRewards.sub(value);
             nodeRewards[msg.sender] = 0;
         }
+        emit claimedReward(msg.sender, value);
+
         return true;
     }
 
@@ -118,11 +150,10 @@ contract mxcStaking {
 
         uint256 balance = address(this).balance;
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards);
-        address nodeAddress = account;
-        uint256 ratio = scale.mul(nodeStaking[nodeAddress]).div(totalStaking);
+        uint256 ratio = scale.mul(nodeStaking[account]).div(totalStaking);
         uint256 reward = newRewards.mul(ratio).div(scale);
 
-        return nodeRewards[nodeAddress].add(reward);
+        return nodeRewards[account].add(reward);
     }
 
 
@@ -135,8 +166,10 @@ contract mxcStaking {
                 nodeRewards[nodeAddress] = nodeRewards[nodeAddress].add(reward);
                 distributedRewards = distributedRewards.add(reward);
             }
+            return true;
         }
-        return true;
+        return false;
+
     }
 
     function isInWhiteList(address account) internal view returns(bool){

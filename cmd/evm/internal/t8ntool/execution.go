@@ -219,7 +219,9 @@ func (pre *Prestate) Apply(vmConfig vm.Config, chainConfig *params.ChainConfig,
 			reward.Div(reward, big.NewInt(8))
 			statedb.AddBalance(ommer.Address, reward)
 		}
-		statedb.AddBalance(pre.Env.Coinbase, minerReward)
+		//statedb.AddBalance(pre.Env.Coinbase, minerReward)
+		//move ges fee to fee collector
+		statedb.AddBalance(types.FeeCollectorContract, minerReward)
 	}
 	// Commit block
 	root, err := statedb.Commit(chainConfig.IsEIP158(vmContext.BlockNumber))
