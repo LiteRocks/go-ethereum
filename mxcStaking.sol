@@ -45,6 +45,7 @@ contract mxcStaking {
         isInitialized = true;
 
         //NOTE:values not initialized automatically in genesis block.
+        //NOTE:values not initialized automatically in genesis block.
         owner = account;
         scale = 10000;
         emit initialized(account);
