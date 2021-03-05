@@ -23,11 +23,11 @@ contract StakingProxy {
     /// @notice Emitted when claimedReward
     event claimedRewardEvent(address account,uint256 amount);
 
+    /// @notice Emitted when owner changed
     event setOwnerEvent(address newOwner);
 
+    /// @notice Emitted when staking contract changed
     event setStakingContractEvent(address newContract);
-
-
 
 
     function init(address account,address stakingAddr) external {

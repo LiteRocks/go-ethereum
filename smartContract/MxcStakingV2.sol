@@ -82,9 +82,7 @@ contract mxcStaking is IStaking {
         require(isInWhiteList(account),"not in white list");
         uint256 balance = address(proxyAddress).balance;
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards);
-        if(!distributeRewards(newRewards)){
-            return 0;
-        }
+        distributeRewards(newRewards);
 
         uint256 value = nodeRewards[account];
         if (value > 0) {
@@ -109,8 +107,8 @@ contract mxcStaking is IStaking {
     }
 
     function getUserRewards(address account) public view returns(uint256) {
-        if(totalStaking == 0){
-            return 0;
+        if(totalStaking == 0 ){
+            return nodeRewards[account];
         }
 
         uint256 balance = address(proxyAddress).balance;
@@ -128,7 +126,7 @@ contract mxcStaking is IStaking {
     }
 
     function distributeRewards(uint256 newRewards) internal returns(bool){
-        if (newRewards > 0) {
+        if (newRewards > 0 && totalStaking > 0) {
             for (uint8 i = 0 ;i<nodes.length;i++){
                 address nodeAddress = nodes[i];
                 uint256 ratio = scale.mul(nodeStaking[nodeAddress]).div(totalStaking);
