@@ -262,62 +262,91 @@ miner.start()
 
 ### 6 质押合约
 
+质押合约使用代理模式，资产储存在StakingProxy合约中，质押和分配信息存储在MxcStaking合约中，
+分配的逻辑可以通过更换合约来达到升级的目的。
+
 质押合约接口如下：
 ```buildoutcfg
 pragma solidity ^0.5.16;
 
 interface mxcStaking {
-    function addWhiteList(address account) external  returns(bool);
-    function addNodeStaking()payable external returns(bool);
-    function withdrawStaking(uint256 amount) external returns(bool);
-    function claimReward() external returns(bool);
+    function init(address account,address stakingAddr) external ;
+    function setOwner(address newOwner) external;
+    function setStakingContract(address newAddress) external;
+    function addNewStaker(address staker) external returns(bool);
+    function stake() payable external returns(bool) ;
+    function withdraw(uint256 amount) external returns(bool);
+    function claimRewards() external returns(bool);
 
-    function getNodeStaking(address account) external view returns(uint);
-    function getNodeReward(address account) external view returns(uint);
-    function init(address account) external returns(bool);
-    function totalStaking() external view returns(uint);
+    function getUserStaking(address account) external view returns(uint256) ;
+    function getUserRewards(address account) external view returns(uint256);
+    function totalStaking() external view returns(uint256);
+    function getStakingUsers() external view returns( address [] memory);
 }
 ```
 
 由于该合约直接部署在创世块中，需要手动初始化并设置合约的owner
 ```buildoutcfg
-function init(address account) external returns(bool);
+function init(address account,address stakingAddr) external returns(bool);
 account : 合约owner地址
+stakingAddr: 代理合约的地址
+```
+
+修改合约Owner
+```buildoutcfg
+function setOwner(address newOwner) external;
+newOwner: owner的地址
+```
+
+修改质押合约的地址
+```buildoutcfg
+function setStakingContract(address newAddress) external;
+newAddress: 合约地址
 ```
 
 增加质押白名单
 ```buildoutcfg
-function addWhiteList(address account) external  returns(bool);
+function addNewStaker(address account) external  returns(bool);
 account: 可以质押的钱包地址
 执行权限: 合约owner
 ```
 
 节点质押
 ```buildoutcfg
-function addNodeStaking()payable external returns(bool);
+function stake()payable external returns(bool);
 需要在构造交易中指定质押的ETH(MXC)
 执行权限:需要在白名单内
 ```
 
 提取收益
 ```buildoutcfg
-function claimReward() external returns(bool);
+function claimRewards() external returns(bool);
 ```
 
 提取质押
 ```buildoutcfg
-function withdrawStaking(uint256 amount) external returns(bool);
+function withdraw(uint256 amount) external returns(bool);
 amount: 提取的质押数量
 ```
 
 查询质押数
 ```buildoutcfg
-function getNodeStaking(address account) external view returns(uint);
+function getUserStaking(address account) external view returns(uint);
 account: 质押的地址
 ```
 
 查询当前的收益
 ```buildoutcfg
-function getNodeReward(address account) external view returns(uint);
+function getUserRewards(address account) external view returns(uint);
 account: 质押的地址
+```
+
+查询当前的总质押
+```buildoutcfg
+function totalStaking() external view returns(uint256);
+```
+
+查询当前质押的用户名单
+```buildoutcfg
+function getStakingUsers() external view returns( address [] memory);
 ```
