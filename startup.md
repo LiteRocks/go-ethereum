@@ -168,7 +168,7 @@ Which folder to save the genesis specs into? (default = current)
   "coinbase": "0x0000000000000000000000000000000000000000",
   "alloc": {
     "87ba503cce4ca532b3b31ffa67fbd32fa5409a60": {
-      "balance": "0x200000000000000000000000000000000000000000000000000000000000000"
+      "balance": "0x33b2e3c9fd0803ce8000000"
     }
   },
   "number": "0x0",
@@ -177,10 +177,12 @@ Which folder to save the genesis specs into? (default = current)
 }
 
 ```
+***NOTE*** 初始化代币供应总量为0x33b2e3c9fd0803ce8000000 ,10亿
+
 
 ### 4. 编译质押合约
 ```buildoutcfg
- solc --bin-runtime -o ./output ./mxcStaking.sol
+ solc --bin-runtime -o ./output ./StakingProxy.sol
 ```
 在output 文件夹下打开mxcStaking.bin-runtime
 ```buildoutcfg
@@ -207,7 +209,7 @@ Which folder to save the genesis specs into? (default = current)
 假定四个节点的端口为2000 ~ 2003,我们暂时只开放node1的http端口，默认为8545
 首先通过下面的命令打印各个节点的公钥
 ```buildoutcfg
-bootnode -nodekey ./data/geth/nodekey -writeaddress
+./bootnode -nodekey ./data/geth/nodekey -writeaddress
 ```
 也可以将节点列表放入<datadir>/geth/static-nodes.json文件中，让节点主动连接和重连：https://geth.ethereum.org/docs/interface/peer-to-peer
 ```buildoutcfg
