@@ -9,25 +9,25 @@ contract StakingProxy {
     bool initilaized = false;
 
     /// @notice Emitted when staking
-    event stakedEvent(address account, uint256 amount);
+    event StakedEvent(address account, uint256 amount);
 
     /// @notice Emitted when initialized
-    event initializedEvent(address account,address stakingAddress);
+    event InitializedEvent(address account,address stakingAddress);
 
     /// @notice Emitted when addWhiteList
-    event addedWhiteListEvent(address account);
+    event AddedWhiteListEvent(address account);
 
     /// @notice Emitted when withdrawnStaking
-    event withdrawnStakingEvent(address account,uint256 amount);
+    event WithdrawnStakingEvent(address account,uint256 amount);
 
     /// @notice Emitted when claimedReward
-    event claimedRewardEvent(address account,uint256 amount);
+    event ClaimedRewardEvent(address account,uint256 amount);
 
     /// @notice Emitted when owner changed
-    event setOwnerEvent(address newOwner);
+    event SetOwnerEvent(address newOwner);
 
     /// @notice Emitted when staking contract changed
-    event setStakingContractEvent(address newContract);
+    event SetStakingContractEvent(address newContract);
 
 
     function init(address account,address stakingAddr) external {
@@ -37,7 +37,7 @@ contract StakingProxy {
 
         //approve 1 Billion mxc to staking contract
         initilaized = true;
-        emit initializedEvent(account,stakingAddr);
+        emit InitializedEvent(account,stakingAddr);
     }
 
     modifier onlyOwner {
@@ -53,25 +53,25 @@ contract StakingProxy {
 
     function setOwner(address newOwner) external onlyOwner{
         owner = newOwner;
-        emit setOwnerEvent(newOwner);
+        emit SetOwnerEvent(newOwner);
     }
 
     function setStakingContract(address newAddress) external onlyOwner {
         stakingContractAddress = newAddress;
-        emit setStakingContractEvent(newAddress);
+        emit SetStakingContractEvent(newAddress);
     }
 
 
     function addNewStaker(address staker) external onlyOwner returns(bool) {
         IStaking staking = _getStakingContract();
         require( staking.addWhiteList(staker),'addNewStaker failed!');
-        emit addedWhiteListEvent(staker);
+        emit AddedWhiteListEvent(staker);
         return true;
     }
 
     function stake() payable external returns(bool) {
         require( _getStakingContract().addUserStaking(msg.sender ,msg.value),'stake failed!');
-        emit stakedEvent(msg.sender,msg.value);
+        emit StakedEvent(msg.sender,msg.value);
         return true;
 
     }
@@ -79,7 +79,7 @@ contract StakingProxy {
     function withdraw(uint256 amount) external returns(bool) {
         require(_getStakingContract().withdrawStaking(msg.sender,amount),'withdraw failed');
         msg.sender.transfer(amount);
-        emit withdrawnStakingEvent(msg.sender, amount);
+        emit WithdrawnStakingEvent(msg.sender, amount);
         return true;
     }
 
@@ -87,7 +87,7 @@ contract StakingProxy {
         uint256 rewards = _getStakingContract().claimReward(msg.sender);
         require( rewards> 0 ,'claim failed');
         msg.sender.transfer(rewards);
-        emit claimedRewardEvent(msg.sender, rewards);
+        emit ClaimedRewardEvent(msg.sender, rewards);
         return true;
     }
 
