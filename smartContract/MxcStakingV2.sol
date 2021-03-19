@@ -1,4 +1,8 @@
 pragma solidity ^0.5.16;
+// import "openzeppelin-solidity/contracts/math/Math.sol";
+// import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+
+
 
 import "./Math.sol";
 import "./SafeMath.sol";
@@ -150,6 +154,7 @@ contract mxcStakingV2 is IStaking {
         Double memory deltaIndex = sub_(globalIndex,uIndex);
         uint256 supplierDelta = mul_(userStaking[account],deltaIndex);
         userRewards[account] = supplierDelta.add(userRewards[account] );
+        distributedRewards = distributedRewards + supplierDelta;
     }
 
 
