@@ -1,8 +1,4 @@
 pragma solidity ^0.5.16;
-// import "openzeppelin-solidity/contracts/math/Math.sol";
-// import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
-
 
 import "./Math.sol";
 import "./SafeMath.sol";
@@ -56,12 +52,8 @@ contract mxcStakingV2 is IStaking {
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards).sub(amount);
         updateGlobalIndex(newRewards);
         distributedUserRewards(account);
+        userStaking[account] = userStaking[account].add(amount);
 
-        if (isNodeRegistered(account)) {
-            userStaking[account] = userStaking[account].add(amount);
-        }else{
-            userStaking[account] = amount;
-        }
         totalStaking = totalStaking.add(amount);
         return true;
     }
