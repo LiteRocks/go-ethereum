@@ -50,7 +50,7 @@ contract mxcStakingV2 is IStaking {
         return true;
     }
 
-    function addUserStaking(address account,uint256 amount ) external returns(bool){
+    function addUserStaking(address account,uint256 amount ) external onlyStakingProxy returns(bool){
         require(isInWhiteList(account),"not in whitelist");
         //trigger distribute rewards
         uint256 balance = address(proxyAddress).balance;
@@ -69,7 +69,7 @@ contract mxcStakingV2 is IStaking {
         return true;
     }
 
-    function withdrawStaking(address account, uint256 amount) external returns(bool){
+    function withdrawStaking(address account, uint256 amount) external onlyStakingProxy returns(bool){
         uint256 balance = address(proxyAddress).balance;
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards);
         updateGlobalIndex(newRewards);
@@ -89,7 +89,7 @@ contract mxcStakingV2 is IStaking {
         return true;
     }
 
-    function claimReward(address account) external returns(uint256) {
+    function claimReward(address account) external onlyStakingProxy returns(uint256) {
 
         require(isInWhiteList(account),"not in white list");
         uint256 balance = address(proxyAddress).balance;
