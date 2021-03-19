@@ -16,7 +16,6 @@ contract mxcStakingV2 is IStaking {
 
     mapping(address=>uint256) userRewards;
     address [] whitelist;
-    address [] nodes;
 
     address public proxyAddress = 0x1000000000000000000000000000000000000001;
     uint256 public distributedRewards = 0;
@@ -62,8 +61,6 @@ contract mxcStakingV2 is IStaking {
             userStaking[account] = userStaking[account].add(amount);
         }else{
             userStaking[account] = amount;
-            nodes.push(account);
-
         }
         totalStaking = totalStaking.add(amount);
         return true;
@@ -78,14 +75,7 @@ contract mxcStakingV2 is IStaking {
         require(amount <= userStaking[account],"not enough staking balance");
         totalStaking = totalStaking.sub(amount);
         userStaking[account] = userStaking[account].sub(amount);
-        if(userStaking[account] == 0){
-            for (uint8 i = 0 ;i<nodes.length;i++){
-                if(nodes[i] == account){
-                    delete nodes[i];
-                    break;
-                }
-            }
-        }
+
         return true;
     }
 
@@ -104,15 +94,6 @@ contract mxcStakingV2 is IStaking {
         }
 
         return value;
-    }
-
-    function isNodeRegistered(address nodeAddress) internal view returns(bool) {
-        for (uint8 i = 0 ;i<nodes.length;i++){
-            if(nodes[i] == nodeAddress){
-                return true;
-            }
-        }
-        return false;
     }
 
     function getUserStaking(address account) public view returns(uint256) {
