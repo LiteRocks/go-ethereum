@@ -54,8 +54,12 @@ contract mxcStakingV2 is IStaking {
         //trigger distribute rewards
         uint256 balance = address(proxyAddress).balance;
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards).sub(amount);
-        updateGlobalIndex(newRewards);
-        distributedUserRewards(account);
+        if (newRewards > 0){
+            updateGlobalIndex(newRewards);
+            distributedUserRewards(account);
+            distributedRewards = distributedRewards.add(newRewards);
+        }
+
         userStaking[account] = userStaking[account].add(amount);
 
         totalStaking = totalStaking.add(amount);
@@ -65,8 +69,11 @@ contract mxcStakingV2 is IStaking {
     function withdrawStaking(address account, uint256 amount) external onlyStakingProxy returns(bool){
         uint256 balance = address(proxyAddress).balance;
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards);
-        updateGlobalIndex(newRewards);
-        distributedUserRewards(account);
+        if (newRewards > 0){
+            updateGlobalIndex(newRewards);
+            distributedUserRewards(account);
+            distributedRewards = distributedRewards.add(newRewards);
+        }
 
         require(amount <= userStaking[account],"not enough staking balance");
         totalStaking = totalStaking.sub(amount);
@@ -80,8 +87,11 @@ contract mxcStakingV2 is IStaking {
         require(isInWhiteList(account),"not in white list");
         uint256 balance = address(proxyAddress).balance;
         uint256 newRewards = balance.sub(totalStaking).sub(distributedRewards);
-        updateGlobalIndex(newRewards);
-        distributedUserRewards(account);
+        if (newRewards > 0){
+            updateGlobalIndex(newRewards);
+            distributedUserRewards(account);
+            distributedRewards = distributedRewards.add(newRewards);
+        }
 
         uint256 value = userRewards[account];
         if (value > 0) {
@@ -154,7 +164,6 @@ contract mxcStakingV2 is IStaking {
         Double memory deltaIndex = sub_(globalIndex,uIndex);
         uint256 supplierDelta = mul_(userStaking[account],deltaIndex);
         userRewards[account] = supplierDelta.add(userRewards[account] );
-        distributedRewards = distributedRewards + supplierDelta;
     }
 
 
