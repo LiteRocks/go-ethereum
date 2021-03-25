@@ -1,6 +1,6 @@
 pragma solidity ^0.5.16;
 
-interface mxcStaking {
+interface cunpStaking {
     function init(address account,address stakingAddr) external ;
     function setOwner(address newOwner) external;
     function setStakingContract(address newAddress) external;

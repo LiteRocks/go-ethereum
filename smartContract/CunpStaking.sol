@@ -4,9 +4,9 @@ pragma solidity ^0.5.16;
 
 import "./Math.sol";
 import "./SafeMath.sol";
-import "./interface/IMxcStaking.sol";
+import "./interface/ICunpStaking.sol";
 
-contract mxcStaking is IStaking {
+contract cunpStaking is IStaking {
 
     using SafeMath for uint256;
 

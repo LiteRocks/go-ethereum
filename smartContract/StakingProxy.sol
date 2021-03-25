@@ -1,7 +1,7 @@
 pragma solidity ^0.5.16;
 
 
-import './interface/IMxcStaking.sol';
+import './interface/ICunpStaking.sol';
 
 contract StakingProxy {
     address public stakingContractAddress;
@@ -35,7 +35,6 @@ contract StakingProxy {
         owner = account;
         stakingContractAddress = stakingAddr;
 
-        //approve 1 Billion mxc to staking contract
         initilaized = true;
         emit InitializedEvent(account,stakingAddr);
     }
