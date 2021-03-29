@@ -250,7 +250,7 @@ eth.sendTransaction({from:'87ba503cce4ca532b3b31ffa67fbd32fa5409a60', to:'a369df
 
 node1~ node4 在控制台执行：
 ```buildoutcfg
-admin.addPeer(“enode://1290aad1ef5b457e219668f02814883236ed805a2f1ac87188d44bac67e0908e5f48fa5bbb09d8f875c3641215d6a5710c31aabe875c943e7ab1f2c6cf28f33f@127.0.0.1:2004”)
+admin.addPeer("enode://1290aad1ef5b457e219668f02814883236ed805a2f1ac87188d44bac67e0908e5f48fa5bbb09d8f875c3641215d6a5710c31aabe875c943e7ab1f2c6cf28f33f@127.0.0.1:2004")
 ```
 
 由共识节点发起新增节点交易
