@@ -263,6 +263,11 @@ node5的控制台中执行
 miner.start()
 ```
 
+删除共识节点
+```buildoutcfg
+clique.discard(signer_address)
+```
+
 ### 6 质押合约
 
 质押合约使用代理模式，资产储存在StakingProxy合约中，质押和分配信息存储在cunpStaking合约中，
